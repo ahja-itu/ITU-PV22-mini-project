@@ -595,7 +595,29 @@ Theorem Forall_perm: forall {A} (f: A -> Prop) al bl,
   Permutation al bl ->
   Forall f al -> Forall f bl.
 Proof.
-  (* FILL IN HERE *) Admitted.
+intros A f al bl H1 H2. induction al as [| h t IH].
+  - apply Permutation_nil in H1. rewrite <- H1 in H2. apply H2.
+  - destruct bl as [| bl'] eqn:E.
+    -- apply Permutation_sym in H1. apply Permutation_nil in H1. rewrite H1 in H2. apply H2.
+    -- apply Forall_forall. intros. Search Forall. Search In. inversion H1.
+
+
+    -- inversion H1.
+      --- apply Forall_forall. intros x' H6. 
+
+ apply IH. rewrite <- H4 in H1. Search Forall. 
+
+
+ apply IH.
+      --- inversion H1.
+
+
+ apply IH.
+        --- apply Permutation_sym in H1. apply Permutation_nil in H1.
+
+
+
+
 (** [] *)
 
 (* 2021-08-11 15:15 *)
