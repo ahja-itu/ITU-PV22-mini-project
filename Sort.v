@@ -146,6 +146,66 @@ Lemma insert_sorted:
   forall a l, sorted l -> sorted (insert a l).
 Proof.
   intros a l S. induction S; simpl.
+  - constructor.
+  - bdestruct (x >=? a).
+  -- apply sorted_cons.
+  --- apply H.  
+  --- apply sorted_1.
+  -- apply sorted_cons.
+  --- lia.
+  --- apply sorted_1.
+  - bdestruct (y >=? a).
+  -- bdestruct (x >=? a).
+  --- apply sorted_cons.
+  ---- apply H1.
+  ---- apply sorted_cons.
+  ----- apply H.
+  ----- apply S.
+  --- apply sorted_cons.
+  ---- lia.
+  ---- apply sorted_cons.
+  ----- apply H0.
+  ----- apply S.
+  -- bdestruct (x >=? a).
+  --- lia.
+  --- apply sorted_cons.
+  ---- lia.
+  ----   
+
+  --- apply sorted_cons.
+  ---- apply H1.
+  ---- apply sorted_cons.
+  ----- apply H.
+  ----- apply S.
+  --- apply sorted_cons.
+  ---- apply H.
+  ---- unfold insert. destruct l.
+  ----- apply sorted_cons.
+  ------ lia.
+  ------ apply sorted_1.
+  ----- fold insert. bdestruct ( n>=? a).
+  ------ inversion S. apply sorted_cons.
+  ------- lia.
+  ------- apply sorted_cons.
+  -------- apply H2.
+  -------- apply H7.
+  ------ inversion S. apply sorted_cons.
+  ------- apply H5.
+  ------- unfold insert.  
+  
+  inversion S.
+  ----- simpl. apply sorted_cons.
+  ------ lia.
+  ------ apply sorted_1.
+  ----- simpl.  
+
+  ---- assert (H3: sorted (insert a (y :: l)) = sorted (y :: insert a l)).
+  ----- simpl. bdestruct (y >=? a).
+  ------ 
+   
+  
+  
+
   (* FILL IN HERE *) Admitted.
 
 (** [] *)
