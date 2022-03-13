@@ -615,7 +615,19 @@
       Permutation al bl ->
       Forall f al -> Forall f bl.
     Proof.
-      (* FILL IN HERE *) Admitted.
+    intros A f al bl H1 H2. 
+    induction H1.
+      - apply H2.
+      - apply Forall_cons.
+        -- inv H2. apply H3.
+        -- inv H2. apply IHPermutation. apply H4.
+      - inv H2. inv H3. apply Forall_cons. 
+        -- apply H2.
+        -- apply Forall_cons. 
+          --- apply H1.
+          --- apply H4.
+      - apply IHPermutation2. apply IHPermutation1. apply H2.
+    Qed.
     (** [] *)
     
     (* 2021-08-11 15:15 *)
