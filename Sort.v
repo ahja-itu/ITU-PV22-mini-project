@@ -145,7 +145,6 @@ Definition is_a_sorting_algorithm (f: list nat -> list nat) := forall al,
 Lemma insert_sorted:
   forall a l, sorted l -> sorted (insert a l).
 Proof.
-  intros a l S. induction S; simpl.
   (* FILL IN HERE *) Admitted.
 
 (** [] *)
@@ -157,8 +156,10 @@ Proof.
 
 Theorem sort_sorted: forall l, sorted (sort l).
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+    intros l. induction l as [|h t IHP].
+    - constructor.
+    - simpl.  apply insert_sorted. apply IHP.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (insert_perm) *)
