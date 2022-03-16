@@ -156,8 +156,18 @@ Proof.
   --- apply sorted_1.
   - bdestruct (y >=? a).
   -- bdestruct (x >=? a).
-  --- apply sorted_cons.
-  ---- apply H1.
+  --- apply sorted_cons; auto.
+  --- apply sorted_cons; auto. lia.
+  -- bdestruct (x >=? a).
+  --- apply sorted_cons; auto.
+  --- apply sorted_cons; auto.
+  ----  
+       
+  
+  
+
+
+  ---- auto.
   ---- apply sorted_cons.
   ----- apply H.
   ----- apply S.
