@@ -186,6 +186,15 @@ Qed.
 
 Theorem sort_perm: forall l, Permutation l (sort l).
 Proof.
+    intros l.
+    induction l.
+    - constructor.
+    - simpl. rewrite <- insert_perm. apply perm_skip. apply IHl.
+Qed.
+     
+
+
+
 (* FILL IN HERE *) Admitted.
 
 (** [] *)
