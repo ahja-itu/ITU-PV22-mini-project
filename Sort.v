@@ -191,12 +191,6 @@ Proof.
     - constructor.
     - simpl. rewrite <- insert_perm. apply perm_skip. apply IHl.
 Qed.
-     
-
-
-
-(* FILL IN HERE *) Admitted.
-
 (** [] *)
 
 (** **** Exercise: 1 star, standard (insertion_sort_correct) *)
