@@ -200,8 +200,11 @@ Qed.
 Theorem insertion_sort_correct:
     is_a_sorting_algorithm sort.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+    unfold is_a_sorting_algorithm.
+    split.
+    - apply sort_perm.
+    - apply sort_sorted.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
