@@ -170,8 +170,14 @@ Qed.
 Lemma insert_perm: forall x l,
     Permutation (x :: l) (insert x l).
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+    intros x l.
+    induction l.
+    - constructor.
+      constructor.
+    - simpl. bdestruct (a >=? x).
+    -- reflexivity.
+    -- rewrite perm_swap. apply perm_skip. apply IHl.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (sort_perm) *)
