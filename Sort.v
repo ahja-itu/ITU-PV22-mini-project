@@ -170,8 +170,14 @@ Qed.
 Lemma insert_perm: forall x l,
     Permutation (x :: l) (insert x l).
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+    intros x l.
+    induction l.
+    - constructor.
+      constructor.
+    - simpl. bdestruct (a >=? x).
+    -- reflexivity.
+    -- rewrite perm_swap. apply perm_skip. apply IHl.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (sort_perm) *)
@@ -180,8 +186,11 @@ Proof.
 
 Theorem sort_perm: forall l, Permutation l (sort l).
 Proof.
-(* FILL IN HERE *) Admitted.
-
+    intros l.
+    induction l.
+    - constructor.
+    - simpl. rewrite <- insert_perm. apply perm_skip. apply IHl.
+Qed.
 (** [] *)
 
 (** **** Exercise: 1 star, standard (insertion_sort_correct) *)
@@ -191,8 +200,11 @@ Proof.
 Theorem insertion_sort_correct:
     is_a_sorting_algorithm sort.
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+    unfold is_a_sorting_algorithm.
+    split.
+    - apply sort_perm.
+    - apply sort_sorted.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
