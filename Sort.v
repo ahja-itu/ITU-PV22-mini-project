@@ -227,7 +227,7 @@ Lemma sorted_sorted': forall al, sorted al -> sorted' al.
     have to think about how to approach it, and try out one or two
     different ideas.*)
 Proof.
-(* FILL IN HERE *) Admitted.
+    (* FILL IN HERE *) Admitted.
 (** [] *)
 
 (** **** Exercise: 3 stars, advanced (sorted'_sorted) *)
@@ -236,7 +236,22 @@ Proof.
 (** Here, you can't do induction on the sortedness of the list,
     because [sorted'] is not an inductive predicate. But the proof
     is not hard. *)
-(* FILL IN HERE *) Admitted.
+    intros. unfold sorted' in H. induction al as [| h t IH].
+        - apply sorted_nil.
+        - destruct t.   
+        -- apply sorted_1.
+        -- apply sorted_cons.
+        --- eapply H.
+        ---- instantiate (1:=1). instantiate (1:=0). lia.
+        ---- simpl. reflexivity.
+        ---- simpl. reflexivity.
+        --- apply IH. 
+            intros. 
+            apply H with (i := S i) (j := S j).
+        ---- lia.
+        ---- rewrite <- H1. reflexivity.
+        ---- rewrite <- H2. reflexivity.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
