@@ -168,9 +168,9 @@ Qed.
 
 Theorem sort_sorted: forall l, sorted (sort l).
 Proof.
-    intros l. induction l as [|h t IHP].
+    intros l. induction l as [|h t IH].
     - constructor.
-    - simpl. apply insert_sorted. apply IHP.
+    - simpl. apply insert_sorted. apply IH.
 Qed.
 (** [] *)
 
@@ -184,11 +184,10 @@ Lemma insert_perm: forall x l,
 Proof.
     intros x l.
     induction l.
-    - constructor.
-      constructor.
+    - repeat constructor.
     - simpl. bdestruct (a >=? x).
-    -- reflexivity.
-    -- rewrite perm_swap. apply perm_skip. apply IHl.
+      -- reflexivity.
+      -- rewrite perm_swap. apply perm_skip. apply IHl.
 Qed.
 (** [] *)
 
@@ -198,8 +197,7 @@ Qed.
 
 Theorem sort_perm: forall l, Permutation l (sort l).
 Proof.
-    intros l.
-    induction l.
+    intros l. induction l.
     - constructor.
     - simpl. rewrite <- insert_perm. apply perm_skip. apply IHl.
 Qed.
@@ -231,7 +229,25 @@ Qed.
     But one way to build confidence in a specification is to state it
     in two different ways, then prove they are equivalent. *)
 
-(** **** Exercise: 4 stars, advanced (sorted_sorted') *)
+
+Lemma panda: forall (h n: nat) (t: list nat), sorted(h::t) -> In n (h::t) -> h <= n.
+Proof.
+intros h n t H1 H2. remember (h::t). generalize dependent h. generalize dependent t. induction H1.
+  - destruct H2.
+  - intros. destruct H2.
+    -- inversion Heql. subst. lia.
+    -- destruct H.
+  - simpl in *. intros. inversion Heql. subst. destruct H2.
+    -- lia.
+    -- destruct H0.
+      --- rewrite H0 in H. apply H.
+      --- assert (y <= n).
+        ---- apply IHsorted with (t:= l).
+          ----- right. apply H0.
+          ----- reflexivity.
+        ---- lia.
+Qed. 
+
 Lemma sorted_sorted': forall al, sorted al -> sorted' al.
 
 (** Hint: Instead of doing induction on the list [al], do induction on
@@ -239,7 +255,27 @@ Lemma sorted_sorted': forall al, sorted al -> sorted' al.
     have to think about how to approach it, and try out one or two
     different ideas.*)
 Proof.
-(* FILL IN HERE *) Admitted.
+    intros. induction H.
+        - unfold sorted'. 
+          destruct i; intros; destruct j; simpl in H0; discriminate H0; lia.
+        - unfold sorted'. destruct i. intros.
+            -- destruct j. 
+                --- lia.
+                --- inversion H1. destruct j; simpl in H3; discriminate H3.
+            -- intros. destruct i; simpl in H0; discriminate H0.
+        - unfold sorted'. intros. destruct j eqn:Ej.
+            -- lia. (*j=0*)
+            -- destruct i. (*j=Sn*)
+                --- inversion H2. apply nth_error_In in H3. apply panda in H3.  (*j=Sn, i=0*)
+                    ---- lia. 
+                    ---- apply sorted_cons; auto.
+                --- inversion H2. inversion H3. unfold sorted' in IHsorted. apply IHsorted with (i:= i) (j:= n). 
+                    ----  lia.
+                    ---- rewrite <-H2. reflexivity.
+                    ---- rewrite <-H3. reflexivity.
+Qed.
+
+
 (** [] *)
 
 (** **** Exercise: 3 stars, advanced (sorted'_sorted) *)
@@ -251,18 +287,13 @@ Proof.
     intros. unfold sorted' in H. induction al as [| h t IH].
         - apply sorted_nil.
         - destruct t.
-        -- apply sorted_1.
-        -- apply sorted_cons.
-        --- eapply H.
-        ---- instantiate (1:=1). instantiate (1:=0). lia.
-        ---- simpl. reflexivity.
-        ---- simpl. reflexivity.
-        --- apply IH.
-            intros.
-            apply H with (i := S i) (j := S j).
-        ---- lia.
-        ---- rewrite <- H1. reflexivity.
-        ---- rewrite <- H2. reflexivity.
+          -- apply sorted_1.
+          -- apply sorted_cons.
+            --- apply H with (i:= 0) (j:= 1); try lia; simpl; reflexivity.
+            --- apply IH. intros. apply H with (i := S i) (j := S j).
+              ---- lia.
+              ---- rewrite <- H1. reflexivity.
+              ---- rewrite <- H2. reflexivity.
 Qed.
 (** [] *)
 
