@@ -231,7 +231,65 @@ Qed.
     But one way to build confidence in a specification is to state it
     in two different ways, then prove they are equivalent. *)
 
-(** **** Exercise: 4 stars, advanced (sorted_sorted') *)
+Lemma hat: forall (iv jv : nat) (t: list nat), sorted(iv::t) -> In jv t -> 
+iv <= jv.
+Proof.
+    Admitted.
+  
+Lemma hat': forall (h n nv : nat) (t: list nat), sorted(h::t) -> nth_error(h::t) n = Some nv -> h <= nv.
+Proof.
+intros h n nv t H1 H2. induction H1.
+  - destruct n; discriminate H2.
+  - destruct n.
+    -- simpl in H2. inversion H2. Admitted.
+
+(*
+Search nth_error.
+
+  - destruct n. discriminate H2.
+  - apply IHsorted. *)
+
+
+(*
+ apply IHsorted. rewrite <- H2. inversion H2. rewrite <- H3 in H2.
+
+  - apply IHsorted with (n := pred n). rewrite <- H2. inversion H2. rewrite <- H3 in H2.
+
+
+
+
+ simpl. inversion H2.
+
+
+
+
+
+ rewrite <- H2. simpl. destruct n. destruct l.
+    -- 
+
+
+
+ simpl in H2. destruct nth_error.*)
+
+
+Lemma panda: forall (h n: nat) (t: list nat), sorted(h::t) -> In n (h::t) -> h <= n.
+Proof.
+intros h n t H1 H2. remember (h::t). generalize dependent h. generalize dependent t. induction H1.
+  - destruct H2.
+  - simpl in *. intros. destruct H2.
+    -- inversion Heql. subst. lia.
+    -- destruct H.
+  - simpl in *. intros. inversion Heql. subst. destruct H2.
+    -- lia.
+    -- destruct H0.
+      --- rewrite H0 in H. apply H.
+      --- assert (y <= n).
+        ---- apply IHsorted with (t:= l).
+          ----- right. apply H0.
+          ----- reflexivity.
+        ---- lia.
+Qed. 
+
 Lemma sorted_sorted': forall al, sorted al -> sorted' al.
 
 (** Hint: Instead of doing induction on the list [al], do induction on
@@ -239,7 +297,38 @@ Lemma sorted_sorted': forall al, sorted al -> sorted' al.
     have to think about how to approach it, and try out one or two
     different ideas.*)
 Proof.
-(* FILL IN HERE *) Admitted.
+    intros. induction H.
+        - unfold sorted'. 
+          destruct i; intros; destruct j; simpl in H0; discriminate H0; lia.
+        (*- unfold sorted'. destruct i. 
+            -- destruct j; intros; simpl in H0; discriminate H0.
+            -- intros. destruct j.
+                --- lia.
+                --- simpl in H0. discriminate H0.*)
+        - unfold sorted'. destruct i. intros.
+            -- destruct j. 
+                --- lia.
+                --- inversion H1. destruct j. 
+                    ---- simpl in H3. discriminate H3.
+                    ---- simpl in H3. discriminate H3.
+            -- intros. simpl in H0. destruct i; simpl in H0; discriminate H0.
+- unfold sorted'. intros. destruct j eqn:Ej.
+            -- lia. (*j=0*)
+            -- destruct i eqn:Ei. (*j=Sn*)
+                --- inversion H2. apply nth_error_In in H3. apply panda in H3.  (*j=Sn, i=0*)
+                    ---- lia. 
+                
+                    ---- apply sorted_cons.
+                        ----- apply H.
+                        ----- apply H0.
+
+                --- inversion H2. inversion H3. unfold sorted' in IHsorted. eapply IHsorted. 
+                    ---- instantiate (1:=n). instantiate (1:=n0). lia.
+                    ---- rewrite <-H2. reflexivity.
+                    ---- rewrite <-H3. reflexivity.
+Qed.
+
+
 (** [] *)
 
 (** **** Exercise: 3 stars, advanced (sorted'_sorted) *)
