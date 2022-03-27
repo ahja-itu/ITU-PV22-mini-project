@@ -268,40 +268,20 @@ Hint Constructors sorted.
 Theorem ins_int_sorted:
   forall a l, sorted l -> sorted (ins_int a l).
 Proof.
-  intros.
-  induction H.
+  intros a l S.
+  induction S; simpl.
   - constructor.
-  - simpl. bdestruct (leb a x).
-  -- constructor. apply H. constructor.
-  -- constructor. lia. constructor.
-  - simpl. bdestruct (leb a x).
-  -- apply sorted_cons.
-  --- apply H1.
-  --- apply sorted_cons.
-  ---- apply H.
-  ---- apply H0.
+  - bdestruct (leb a x).
+  -- auto.
+  -- apply sorted_cons; auto; lia.
+  - bdestruct (leb a x).
+  -- auto.
   -- bdestruct (leb a y).
-  --- apply sorted_cons.
+  --- apply sorted_cons; auto; lia.
+  --- simpl in IHS. bdestruct (leb a y).
   ---- lia.
-  ---- apply sorted_cons.
-  ----- lia.
-  ----- apply H0.
-  --- apply sorted_cons.
-  ---- lia.  
-
-
-  (* --- constructor. (* Ved ikke om jeg går forkert her, men vi prøver... det gjorde jeg måske *)
-  ---- lia.
-  ---- inversion H0.
-  ----- simpl. intuition.
-  ----- simpl. bdestruct (leb a y0).
-  ------ intuition.
-  ------ simpl. *)
- 
-
-
-
-Admitted.
+  ---- auto.
+Qed.     
 
 Lemma ins_int_perm : forall a l,
   Permutation (a :: l) (ins_int a l).
