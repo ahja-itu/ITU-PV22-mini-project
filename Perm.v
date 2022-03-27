@@ -409,8 +409,8 @@
           
     
        YOUR TASK: Add three more properties. Write them here: 
-         - 5. If [Permutation al bl] and [x in al] then [x in bl]
-         - 6. If [Permutation al bl] and [x not in al] then [x not in bl]
+         - 5. If [Permutation al bl] and [In x al] then [In x bl]
+         - 6. If [Permutation al bl] and [~(In x al)] then [~(In x bl)]
          - 7. [Permutation l l] is always true
        *)
     
@@ -618,15 +618,9 @@
     intros A f al bl H1 H2. 
     induction H1.
       - apply H2.
-      - apply Forall_cons.
-        -- inv H2. apply H3.
-        -- inv H2. apply IHPermutation. apply H4.
-      - inv H2. inv H3. apply Forall_cons. 
-        -- apply H2.
-        -- apply Forall_cons. 
-          --- apply H1.
-          --- apply H4.
-      - apply IHPermutation2. apply IHPermutation1. apply H2.
+      - apply Forall_cons; inv H2; auto.
+      - inv H2. inv H3. apply Forall_cons; auto. 
+      - auto.
     Qed.
     (** [] *)
     
