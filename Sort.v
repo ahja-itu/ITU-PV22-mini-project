@@ -198,6 +198,8 @@ Qed.
 (** Finish the proof of correctness! *)
 
 Theorem insertion_sort_correct:
+    (* Definition is_a_sorting_algorithm (f: list nat -> list nat) := forall al,
+    Permutation al (f al) /\ sorted (f al). *)
     is_a_sorting_algorithm sort.
 Proof.
     unfold is_a_sorting_algorithm.
