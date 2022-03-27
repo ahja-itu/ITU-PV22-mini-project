@@ -198,8 +198,6 @@ Qed.
 (** Finish the proof of correctness! *)
 
 Theorem insertion_sort_correct:
-    (* Definition is_a_sorting_algorithm (f: list nat -> list nat) := forall al,
-    Permutation al (f al) /\ sorted (f al). *)
     is_a_sorting_algorithm sort.
 Proof.
     unfold is_a_sorting_algorithm.
@@ -240,15 +238,15 @@ Proof.
     is not hard. *)
     intros. unfold sorted' in H. induction al as [| h t IH].
         - apply sorted_nil.
-        - destruct t.   
+        - destruct t.
         -- apply sorted_1.
         -- apply sorted_cons.
         --- eapply H.
         ---- instantiate (1:=1). instantiate (1:=0). lia.
         ---- simpl. reflexivity.
         ---- simpl. reflexivity.
-        --- apply IH. 
-            intros. 
+        --- apply IH.
+            intros.
             apply H with (i := S i) (j := S j).
         ---- lia.
         ---- rewrite <- H1. reflexivity.
