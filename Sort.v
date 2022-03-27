@@ -145,7 +145,19 @@ Definition is_a_sorting_algorithm (f: list nat -> list nat) := forall al,
 Lemma insert_sorted:
   forall a l, sorted l -> sorted (insert a l).
 Proof.
-  (* FILL IN HERE *) Admitted.
+    intros a l S. induction S; simpl.
+    - constructor.
+    - bdestruct (x>=? a).
+        -- auto.
+        -- apply sorted_cons; auto; lia.
+    - bdestruct ( x>=? a).
+        -- auto.
+        -- bdestruct (y>=?a).
+            --- apply sorted_cons; auto; lia.
+            --- simpl in IHS. bdestruct (y>=?a). 
+                ---- lia.
+                ---- auto.
+Qed.
 
 (** [] *)
 
@@ -158,7 +170,7 @@ Theorem sort_sorted: forall l, sorted (sort l).
 Proof.
     intros l. induction l as [|h t IHP].
     - constructor.
-    - simpl.  apply insert_sorted. apply IHP.
+    - simpl. apply insert_sorted. apply IHP.
 Qed.
 (** [] *)
 
@@ -238,15 +250,15 @@ Proof.
     is not hard. *)
     intros. unfold sorted' in H. induction al as [| h t IH].
         - apply sorted_nil.
-        - destruct t.   
+        - destruct t.
         -- apply sorted_1.
         -- apply sorted_cons.
         --- eapply H.
         ---- instantiate (1:=1). instantiate (1:=0). lia.
         ---- simpl. reflexivity.
         ---- simpl. reflexivity.
-        --- apply IH. 
-            intros. 
+        --- apply IH.
+            intros.
             apply H with (i := S i) (j := S j).
         ---- lia.
         ---- rewrite <- H1. reflexivity.

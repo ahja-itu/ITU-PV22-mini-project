@@ -263,11 +263,64 @@ Hint Constructors sorted.
 (** Prove the correctness of [sort_int] by adapting your solution to
     [insertion_sort_correct] from [Sort]. *)
 
+
+(* Helper theorems, modelled after the theorems helping to sort [insertion_sort_correct] *)
+Theorem ins_int_sorted:
+  forall a l, sorted l -> sorted (ins_int a l).
+Proof.
+  intros a l S.
+  induction S; simpl.
+  - constructor.
+  - bdestruct (leb a x).
+  -- auto.
+  -- apply sorted_cons; auto; lia.
+  - bdestruct (leb a x).
+  -- auto.
+  -- bdestruct (leb a y).
+  --- apply sorted_cons; auto; lia.
+  --- simpl in IHS. bdestruct (leb a y).
+  ---- lia.
+  ---- auto.
+Qed.     
+
+Lemma ins_int_perm : forall a l,
+  Permutation (a :: l) (ins_int a l).
+Proof.
+  intros.
+  induction l.
+  - constructor. constructor.
+  - simpl. bdestruct (leb a a0).
+  -- reflexivity.
+  -- rewrite perm_swap. apply perm_skip. apply IHl.
+Qed.
+
+
+Theorem sort_int_sorted : forall (al : list int), sorted (sort_int al).
+Proof.
+  intros.
+  induction al as [| h t IH].
+  - constructor.
+  - simpl. 
+    apply ins_int_sorted.
+    apply IH.
+Qed.
+
+Theorem sort_int_perm : forall (al : list int), Permutation al (sort_int al).
+Proof.
+  intros.
+  induction al.
+  - constructor.
+  - simpl. rewrite <- ins_int_perm. apply perm_skip. apply IHal.
+Qed.
+
+(* Original Theorem *)
 Theorem sort_int_correct : forall (al : list int),
     Permutation al (sort_int al) /\ sorted (sort_int al).
 Proof.
-  (* FILL IN HERE *) Admitted.
-
+  split.
+  - apply sort_int_perm.
+  - apply sort_int_sorted.
+Qed.
 (** [] *)
 
 (* ################################################################# *)
